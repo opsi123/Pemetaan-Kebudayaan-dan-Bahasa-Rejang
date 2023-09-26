@@ -1,0 +1,4202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="css/qgis2web.css" />
+    <link rel="stylesheet" href="css/fontawesome-all.min.css" />
+    <style>
+      #map,
+      body,
+      html {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <title>GIS Pemetaan Budaya dan Bahasa Rejang</title>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="js/qgis2web_expressions.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/L.Control.Locate.min.js"></script>
+    <script src="js/leaflet.rotatedMarker.js"></script>
+    <script src="js/leaflet.pattern.js"></script>
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="js/rbush.min.js"></script>
+    <script src="js/labelgun.min.js"></script>
+    <script src="js/labels.js"></script>
+    <script src="data/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2.js"></script>
+    <script src="data/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3.js"></script>
+    <script src="data/kordinatkeclebong_4.js"></script>
+    <script src="data/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5.js"></script>
+    <script src="data/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6.js"></script>
+    <script src="data/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7.js"></script>
+    <script src="data/kordinat_8.js"></script>
+    <script src="data/lebong_9.js"></script>
+    <script src="data/bengkulu_utara2_10.js"></script>
+    <script src="data/rejang_lebing_2_11.js"></script>
+    <script src="data/benteng_12.js"></script>
+    <script>
+      var highlightLayer;
+      function highlightFeature(e) {
+        highlightLayer = e.target;
+
+        if (e.target.feature.geometry.type === "LineString") {
+          highlightLayer.setStyle({
+            color: "#ffff00",
+          });
+        } else {
+          highlightLayer.setStyle({
+            fillColor: "#ffff00",
+            fillOpacity: 1,
+          });
+        }
+      }
+      var map = L.map("map", {
+        zoomControl: true,
+        maxZoom: 28,
+        minZoom: 1,
+      }).fitBounds([
+        [-3.598619371575416, 101.7252705880429],
+        [-2.8145171987298534, 103.14016402596904],
+      ]);
+      var hash = new L.Hash(map);
+      map.attributionControl.setPrefix(
+        '<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>'
+      );
+      var autolinker = new Autolinker({
+        truncate: { length: 30, location: "smart" },
+      });
+      L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
+      var bounds_group = new L.featureGroup([]);
+      function setBounds() {}
+      map.createPane("pane_googlemaps_0");
+      map.getPane("pane_googlemaps_0").style.zIndex = 400;
+      var layer_googlemaps_0 = L.tileLayer(
+        "https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}",
+        {
+          pane: "pane_googlemaps_0",
+          opacity: 1.0,
+          attribution: "",
+          minZoom: 1,
+          maxZoom: 28,
+          minNativeZoom: 0,
+          maxNativeZoom: 18,
+        }
+      );
+      layer_googlemaps_0;
+      map.addLayer(layer_googlemaps_0);
+      map.createPane("pane_OSMStandard_1");
+      map.getPane("pane_OSMStandard_1").style.zIndex = 401;
+      var layer_OSMStandard_1 = L.tileLayer(
+        "http://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          pane: "pane_OSMStandard_1",
+          opacity: 1.0,
+          attribution:
+            '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+          minZoom: 1,
+          maxZoom: 28,
+          minNativeZoom: 0,
+          maxNativeZoom: 19,
+        }
+      );
+      layer_OSMStandard_1;
+      map.addLayer(layer_OSMStandard_1);
+      function pop_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2(
+        feature,
+        layer
+      ) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <th scope="row">KDPPUM</th>\
+                        <td>' +
+          (feature.properties["KDPPUM"] !== null
+            ? autolinker.link(feature.properties["KDPPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMOBJ</th>\
+                        <td>' +
+          (feature.properties["NAMOBJ"] !== null
+            ? autolinker.link(feature.properties["NAMOBJ"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["REMARK"] !== null
+            ? autolinker.link(feature.properties["REMARK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPBPS"] !== null
+            ? autolinker.link(feature.properties["KDPBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FCODE"] !== null
+            ? autolinker.link(feature.properties["FCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LUASWH"] !== null
+            ? autolinker.link(feature.properties["LUASWH"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["UUPP"] !== null
+            ? autolinker.link(feature.properties["UUPP"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SRS_ID"] !== null
+            ? autolinker.link(feature.properties["SRS_ID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LCODE"] !== null
+            ? autolinker.link(feature.properties["LCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["METADATA"] !== null
+            ? autolinker.link(feature.properties["METADATA"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEBPS"] !== null
+            ? autolinker.link(feature.properties["KDEBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEPUM"] !== null
+            ? autolinker.link(feature.properties["KDEPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCBPS"] !== null
+            ? autolinker.link(feature.properties["KDCBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCPUM"] !== null
+            ? autolinker.link(feature.properties["KDCPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBBPS"] !== null
+            ? autolinker.link(feature.properties["KDBBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBPUM"] !== null
+            ? autolinker.link(feature.properties["KDBPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKD"] !== null
+            ? autolinker.link(feature.properties["WADMKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKD"] !== null
+            ? autolinker.link(feature.properties["WIADKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKC"] !== null
+            ? autolinker.link(feature.properties["WADMKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKC"] !== null
+            ? autolinker.link(feature.properties["WIADKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKK"] !== null
+            ? autolinker.link(feature.properties["WADMKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKK"] !== null
+            ? autolinker.link(feature.properties["WIADKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMPR"] !== null
+            ? autolinker.link(feature.properties["WADMPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADPR"] !== null
+            ? autolinker.link(feature.properties["WIADPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["TIPADM"] !== null
+            ? autolinker.link(feature.properties["TIPADM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Leng"] !== null
+            ? autolinker.link(feature.properties["Shape_Leng"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Area"] !== null
+            ? autolinker.link(feature.properties["Shape_Area"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_0(
+        feature
+      ) {
+        switch (String(feature.properties["NAMOBJ"])) {
+          default:
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(122,220,105,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BERMANI ILIR":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(151,60,208,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP SELATAN":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(235,139,240,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KABAWETAN":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(93,60,178,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KEPAHIANG":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(112,45,146,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(123,112,189,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGIKELINDANG":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(69,44,180,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGISAKTI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(58,80,135,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MUARAKEMUMU":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(192,82,66,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PAGARJATI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(244,87,163,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PASEMAHAIRKERUH":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(93,125,153,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SEBERANGMUSI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(57,153,79,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SELUPUREJANG":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(206,113,56,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SINDANGDATARAN":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(47,206,255,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TABAPENANJUNG":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(98,242,235,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TEBATKARAI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(96,37,174,1.0)",
+              interactive: true,
+            };
+            break;
+          case "UJANMAS":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(129,29,144,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ULUMUSI":
+            return {
+              pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(122,187,237,1.0)",
+              interactive: true,
+            };
+            break;
+        }
+      }
+      map.createPane(
+        "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2"
+      );
+      map.getPane(
+        "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2"
+      ).style.zIndex = 402;
+      map.getPane(
+        "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2"
+      ).style["mix-blend-mode"] = "normal";
+      var layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2 =
+        new L.geoJson(
+          json_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+          {
+            attribution: "",
+            interactive: true,
+            dataVar:
+              "json_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+            layerName:
+              "layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+            pane: "pane_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+            onEachFeature:
+              pop_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+            style:
+              style_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_0,
+          }
+        );
+      bounds_group.addLayer(
+        layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2
+      );
+      map.addLayer(
+        layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2
+      );
+      function pop_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3(
+        feature,
+        layer
+      ) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPPUM"] !== null
+            ? autolinker.link(feature.properties["KDPPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMOBJ</th>\
+                        <td>' +
+          (feature.properties["NAMOBJ"] !== null
+            ? autolinker.link(feature.properties["NAMOBJ"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["REMARK"] !== null
+            ? autolinker.link(feature.properties["REMARK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPBPS"] !== null
+            ? autolinker.link(feature.properties["KDPBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FCODE"] !== null
+            ? autolinker.link(feature.properties["FCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LUASWH"] !== null
+            ? autolinker.link(feature.properties["LUASWH"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["UUPP"] !== null
+            ? autolinker.link(feature.properties["UUPP"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SRS_ID"] !== null
+            ? autolinker.link(feature.properties["SRS_ID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LCODE"] !== null
+            ? autolinker.link(feature.properties["LCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">METADATA</th>\
+                        <td>' +
+          (feature.properties["METADATA"] !== null
+            ? autolinker.link(feature.properties["METADATA"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">KDEBPS</th>\
+                        <td>' +
+          (feature.properties["KDEBPS"] !== null
+            ? autolinker.link(feature.properties["KDEBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">KDEPUM</th>\
+                        <td>' +
+          (feature.properties["KDEPUM"] !== null
+            ? autolinker.link(feature.properties["KDEPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCBPS"] !== null
+            ? autolinker.link(feature.properties["KDCBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCPUM"] !== null
+            ? autolinker.link(feature.properties["KDCPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBBPS"] !== null
+            ? autolinker.link(feature.properties["KDBBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBPUM"] !== null
+            ? autolinker.link(feature.properties["KDBPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKD"] !== null
+            ? autolinker.link(feature.properties["WADMKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKD"] !== null
+            ? autolinker.link(feature.properties["WIADKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKC"] !== null
+            ? autolinker.link(feature.properties["WADMKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKC"] !== null
+            ? autolinker.link(feature.properties["WIADKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKK"] !== null
+            ? autolinker.link(feature.properties["WADMKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKK"] !== null
+            ? autolinker.link(feature.properties["WIADKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMPR"] !== null
+            ? autolinker.link(feature.properties["WADMPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">WIADPR</th>\
+                        <td>' +
+          (feature.properties["WIADPR"] !== null
+            ? autolinker.link(feature.properties["WIADPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["TIPADM"] !== null
+            ? autolinker.link(feature.properties["TIPADM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Leng"] !== null
+            ? autolinker.link(feature.properties["Shape_Leng"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Area"] !== null
+            ? autolinker.link(feature.properties["Shape_Area"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_0(
+        feature
+      ) {
+        switch (String(feature.properties["NAMOBJ"])) {
+          case "AMEN":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(113,206,67,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ARGAMAKMUR":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(90,57,222,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ARMAJAYA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(225,167,106,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BATANGASAI":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(136,221,225,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BINGINKUNING":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(189,225,44,1.0)",
+              interactive: true,
+            };
+            break;
+          case "DAERAH SENGKETA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(238,234,113,1.0)",
+              interactive: true,
+            };
+            break;
+          case "GIRIMULYA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(235,115,137,1.0)",
+              interactive: true,
+            };
+            break;
+          case "HULUPALIK":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(167,35,238,1.0)",
+              interactive: true,
+            };
+            break;
+          case "JANGKAT":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(171,237,85,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KARANGJAYA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(76,110,205,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG ATAS":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(129,132,236,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG SELATAN":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(207,24,97,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG TENGAH":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(237,198,79,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG UTARA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(77,228,60,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONGSAKTI":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(206,74,67,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PADANGJAYA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(60,210,80,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PELABAI":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(28,204,90,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PINANGBELAPIS":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(117,239,188,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PUTRIHIJAU":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(162,125,211,1.0)",
+              interactive: true,
+            };
+            break;
+          case "RIMBOPENGADANG":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(191,13,211,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SELANGIT":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(39,240,203,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TOPOS":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(231,44,163,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ULOKKUPAI":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(239,49,214,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ULURAWAS":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(231,133,94,1.0)",
+              interactive: true,
+            };
+            break;
+          case "URAMJAYA":
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(77,178,218,1.0)",
+              interactive: true,
+            };
+            break;
+          default:
+            return {
+              pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(143,190,237,1.0)",
+              interactive: true,
+            };
+            break;
+        }
+      }
+      map.createPane(
+        "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3"
+      );
+      map.getPane(
+        "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3"
+      ).style.zIndex = 403;
+      map.getPane(
+        "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3"
+      ).style["mix-blend-mode"] = "normal";
+      var layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3 =
+        new L.geoJson(
+          json_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+          {
+            attribution: "",
+            interactive: true,
+            dataVar:
+              "json_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+            layerName:
+              "layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+            pane: "pane_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+            onEachFeature:
+              pop_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+            style:
+              style_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_0,
+          }
+        );
+      bounds_group.addLayer(
+        layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3
+      );
+      map.addLayer(layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3);
+      function pop_kordinatkeclebong_4(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["x"] !== null
+            ? autolinker.link(feature.properties["x"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["y"] !== null
+            ? autolinker.link(feature.properties["y"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["field_3"] !== null
+            ? autolinker.link(feature.properties["field_3"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_kordinatkeclebong_4_0() {
+        return {
+          pane: "pane_kordinatkeclebong_4",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(213,180,60,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_kordinatkeclebong_4");
+      map.getPane("pane_kordinatkeclebong_4").style.zIndex = 404;
+      map.getPane("pane_kordinatkeclebong_4").style["mix-blend-mode"] =
+        "normal";
+      var layer_kordinatkeclebong_4 = new L.geoJson(json_kordinatkeclebong_4, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_kordinatkeclebong_4",
+        layerName: "layer_kordinatkeclebong_4",
+        pane: "pane_kordinatkeclebong_4",
+        onEachFeature: pop_kordinatkeclebong_4,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_kordinatkeclebong_4_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_kordinatkeclebong_4);
+      map.addLayer(layer_kordinatkeclebong_4);
+      function pop_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5(
+        feature,
+        layer
+      ) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPPUM"] !== null
+            ? autolinker.link(feature.properties["KDPPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMOBJ</th>\
+                        <td>' +
+          (feature.properties["NAMOBJ"] !== null
+            ? autolinker.link(feature.properties["NAMOBJ"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["REMARK"] !== null
+            ? autolinker.link(feature.properties["REMARK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPBPS"] !== null
+            ? autolinker.link(feature.properties["KDPBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FCODE"] !== null
+            ? autolinker.link(feature.properties["FCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LUASWH"] !== null
+            ? autolinker.link(feature.properties["LUASWH"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["UUPP"] !== null
+            ? autolinker.link(feature.properties["UUPP"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SRS_ID"] !== null
+            ? autolinker.link(feature.properties["SRS_ID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LCODE"] !== null
+            ? autolinker.link(feature.properties["LCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["METADATA"] !== null
+            ? autolinker.link(feature.properties["METADATA"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEBPS"] !== null
+            ? autolinker.link(feature.properties["KDEBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEPUM"] !== null
+            ? autolinker.link(feature.properties["KDEPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCBPS"] !== null
+            ? autolinker.link(feature.properties["KDCBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCPUM"] !== null
+            ? autolinker.link(feature.properties["KDCPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBBPS"] !== null
+            ? autolinker.link(feature.properties["KDBBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBPUM"] !== null
+            ? autolinker.link(feature.properties["KDBPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKD"] !== null
+            ? autolinker.link(feature.properties["WADMKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKD"] !== null
+            ? autolinker.link(feature.properties["WIADKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKC"] !== null
+            ? autolinker.link(feature.properties["WADMKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKC"] !== null
+            ? autolinker.link(feature.properties["WIADKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKK"] !== null
+            ? autolinker.link(feature.properties["WADMKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKK"] !== null
+            ? autolinker.link(feature.properties["WIADKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMPR"] !== null
+            ? autolinker.link(feature.properties["WADMPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADPR"] !== null
+            ? autolinker.link(feature.properties["WIADPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["TIPADM"] !== null
+            ? autolinker.link(feature.properties["TIPADM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Leng"] !== null
+            ? autolinker.link(feature.properties["Shape_Leng"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Area"] !== null
+            ? autolinker.link(feature.properties["Shape_Area"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_0(
+        feature
+      ) {
+        switch (String(feature.properties["NAMOBJ"])) {
+          case "BANGHAJI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(204,135,15,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BERMANI ULU":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(240,107,152,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BERMANI ULU RAYA":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(237,15,130,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BINDURIANG":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(115,69,214,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(66,209,150,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP SELATAN":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(124,174,235,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP TENGAH":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(120,204,97,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP TIMUR":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(19,72,217,1.0)",
+              interactive: true,
+            };
+            break;
+          case "CURUP UTARA":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(132,234,171,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KABAWETAN":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(170,213,15,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KOTAPADANG":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(79,200,77,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LUBUKLINGGAU BARAT SATU":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(219,112,210,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LUBUKLINGGAU SELATAN SATU":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(227,87,106,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LUBUKLINGGAU TIMUR DUA":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(237,100,198,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(48,226,83,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MUARABELITI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(233,217,134,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MUARAKEMUMU":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(197,124,228,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PADANGULAKTANDING":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(68,46,233,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SALING":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(20,34,223,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SELANGIT":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(96,186,204,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SELUPUREJANG":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(234,236,92,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SINDANGBELITI ILIR":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(191,50,207,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SINDANGBELITI ULU":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(26,161,234,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SINDANGDATARAN":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(138,212,27,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SINDANGKELINGI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(125,229,226,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TALANGPADANG":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(158,236,106,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TEBINGTINGGI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(222,153,100,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TIANGPUMPUNGKEPUNGUT":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(132,29,229,1.0)",
+              interactive: true,
+            };
+            break;
+          case "UJANMAS":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(230,127,93,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ULUMUSI":
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(204,96,90,1.0)",
+              interactive: true,
+            };
+            break;
+          default:
+            return {
+              pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(134,232,209,1.0)",
+              interactive: true,
+            };
+            break;
+        }
+      }
+      map.createPane(
+        "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5"
+      );
+      map.getPane(
+        "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5"
+      ).style.zIndex = 405;
+      map.getPane(
+        "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5"
+      ).style["mix-blend-mode"] = "normal";
+      var layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5 =
+        new L.geoJson(
+          json_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+          {
+            attribution: "",
+            interactive: true,
+            dataVar:
+              "json_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+            layerName:
+              "layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+            pane: "pane_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+            onEachFeature:
+              pop_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+            style:
+              style_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_0,
+          }
+        );
+      bounds_group.addLayer(
+        layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5
+      );
+      map.addLayer(
+        layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5
+      );
+      function pop_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6(
+        feature,
+        layer
+      ) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPPUM"] !== null
+            ? autolinker.link(feature.properties["KDPPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMOBJ</th>\
+                        <td>' +
+          (feature.properties["NAMOBJ"] !== null
+            ? autolinker.link(feature.properties["NAMOBJ"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["REMARK"] !== null
+            ? autolinker.link(feature.properties["REMARK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPBPS"] !== null
+            ? autolinker.link(feature.properties["KDPBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FCODE"] !== null
+            ? autolinker.link(feature.properties["FCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LUASWH"] !== null
+            ? autolinker.link(feature.properties["LUASWH"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["UUPP"] !== null
+            ? autolinker.link(feature.properties["UUPP"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SRS_ID"] !== null
+            ? autolinker.link(feature.properties["SRS_ID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LCODE"] !== null
+            ? autolinker.link(feature.properties["LCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["METADATA"] !== null
+            ? autolinker.link(feature.properties["METADATA"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEBPS"] !== null
+            ? autolinker.link(feature.properties["KDEBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEPUM"] !== null
+            ? autolinker.link(feature.properties["KDEPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCBPS"] !== null
+            ? autolinker.link(feature.properties["KDCBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCPUM"] !== null
+            ? autolinker.link(feature.properties["KDCPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBBPS"] !== null
+            ? autolinker.link(feature.properties["KDBBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBPUM"] !== null
+            ? autolinker.link(feature.properties["KDBPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKD"] !== null
+            ? autolinker.link(feature.properties["WADMKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKD"] !== null
+            ? autolinker.link(feature.properties["WIADKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKC"] !== null
+            ? autolinker.link(feature.properties["WADMKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKC"] !== null
+            ? autolinker.link(feature.properties["WIADKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKK"] !== null
+            ? autolinker.link(feature.properties["WADMKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKK"] !== null
+            ? autolinker.link(feature.properties["WIADKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMPR"] !== null
+            ? autolinker.link(feature.properties["WADMPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADPR"] !== null
+            ? autolinker.link(feature.properties["WIADPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["TIPADM"] !== null
+            ? autolinker.link(feature.properties["TIPADM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Leng"] !== null
+            ? autolinker.link(feature.properties["Shape_Leng"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Area"] !== null
+            ? autolinker.link(feature.properties["Shape_Area"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_0(
+        feature
+      ) {
+        switch (String(feature.properties["NAMOBJ"])) {
+          case "AIRNAPAL":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(44,218,189,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BANGHAJI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(107,54,212,1.0)",
+              interactive: true,
+            };
+            break;
+          case "HULUPALIK":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(199,236,125,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KARANGTINGGI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(14,65,207,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KEPAHIANG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(156,40,223,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KERKAP":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(72,158,224,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LUBUKSANDI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(79,207,227,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGIKELINDANG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(224,57,32,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MERIGISAKTI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(68,63,223,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MUARABANGKA HULU":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(225,175,136,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PAGARJATI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(40,214,81,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PEMATANG TIGA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(76,202,67,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PONDOKKELAPA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(120,224,176,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PONDOKKUBANG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(207,114,158,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SEBERANGMUSI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(210,122,216,1.0)",
+              interactive: true,
+            };
+            break;
+          case "SUKARAJA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(211,118,134,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TABAPENANJUNG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(201,154,25,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TALANGEMPAT":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(131,218,80,1.0)",
+              interactive: true,
+            };
+            break;
+          case "UJANMAS":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(233,69,195,1.0)",
+              interactive: true,
+            };
+            break;
+          default:
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(217,220,125,1.0)",
+              interactive: true,
+            };
+            break;
+        }
+      }
+      map.createPane(
+        "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6"
+      );
+      map.getPane(
+        "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6"
+      ).style.zIndex = 406;
+      map.getPane(
+        "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6"
+      ).style["mix-blend-mode"] = "normal";
+      var layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6 =
+        new L.geoJson(
+          json_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+          {
+            attribution: "",
+            interactive: true,
+            dataVar:
+              "json_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+            layerName:
+              "layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+            pane: "pane_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+            onEachFeature:
+              pop_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+            style:
+              style_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_0,
+          }
+        );
+      bounds_group.addLayer(
+        layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6
+      );
+      map.addLayer(
+        layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6
+      );
+      function pop_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7(
+        feature,
+        layer
+      ) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPPUM"] !== null
+            ? autolinker.link(feature.properties["KDPPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMOBJ</th>\
+                        <td>' +
+          (feature.properties["NAMOBJ"] !== null
+            ? autolinker.link(feature.properties["NAMOBJ"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["REMARK"] !== null
+            ? autolinker.link(feature.properties["REMARK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDPBPS"] !== null
+            ? autolinker.link(feature.properties["KDPBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FCODE"] !== null
+            ? autolinker.link(feature.properties["FCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LUASWH"] !== null
+            ? autolinker.link(feature.properties["LUASWH"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["UUPP"] !== null
+            ? autolinker.link(feature.properties["UUPP"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SRS_ID"] !== null
+            ? autolinker.link(feature.properties["SRS_ID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LCODE"] !== null
+            ? autolinker.link(feature.properties["LCODE"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["METADATA"] !== null
+            ? autolinker.link(feature.properties["METADATA"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEBPS"] !== null
+            ? autolinker.link(feature.properties["KDEBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDEPUM"] !== null
+            ? autolinker.link(feature.properties["KDEPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCBPS"] !== null
+            ? autolinker.link(feature.properties["KDCBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDCPUM"] !== null
+            ? autolinker.link(feature.properties["KDCPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBBPS"] !== null
+            ? autolinker.link(feature.properties["KDBBPS"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["KDBPUM"] !== null
+            ? autolinker.link(feature.properties["KDBPUM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKD"] !== null
+            ? autolinker.link(feature.properties["WADMKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKD"] !== null
+            ? autolinker.link(feature.properties["WIADKD"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKC"] !== null
+            ? autolinker.link(feature.properties["WADMKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKC"] !== null
+            ? autolinker.link(feature.properties["WIADKC"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMKK"] !== null
+            ? autolinker.link(feature.properties["WADMKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADKK"] !== null
+            ? autolinker.link(feature.properties["WIADKK"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WADMPR"] !== null
+            ? autolinker.link(feature.properties["WADMPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["WIADPR"] !== null
+            ? autolinker.link(feature.properties["WIADPR"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["TIPADM"] !== null
+            ? autolinker.link(feature.properties["TIPADM"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Leng"] !== null
+            ? autolinker.link(feature.properties["Shape_Leng"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Shape_Area"] !== null
+            ? autolinker.link(feature.properties["Shape_Area"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: "auto" });
+      }
+
+      function style_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_0(
+        feature
+      ) {
+        switch (String(feature.properties["NAMOBJ"])) {
+          case "AIRBESI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(211,70,81,1.0)",
+              interactive: true,
+            };
+            break;
+          case "AIRNAPAL":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(82,212,212,1.0)",
+              interactive: true,
+            };
+            break;
+          case "AIRPADANG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(234,165,138,1.0)",
+              interactive: true,
+            };
+            break;
+          case "AIRRAMI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(48,95,223,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ARGAMAKMUR":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(221,70,193,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ARMAJAYA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(156,227,131,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BANGHAJI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(72,20,205,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BATIKNAU":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(122,208,176,1.0)",
+              interactive: true,
+            };
+            break;
+          case "BERMANI ULU":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(56,208,42,1.0)",
+              interactive: true,
+            };
+            break;
+          case "DAERAH SENGKETA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(214,77,61,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ENGGANO":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(41,200,171,1.0)",
+              interactive: true,
+            };
+            break;
+          case "GIRIMULYA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(115,36,206,1.0)",
+              interactive: true,
+            };
+            break;
+          case "HULUPALIK":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(201,173,47,1.0)",
+              interactive: true,
+            };
+            break;
+          case "JANGKAT":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(202,49,199,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KERKAP":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(95,164,204,1.0)",
+              interactive: true,
+            };
+            break;
+          case "KETAHUN":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(214,91,169,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LAIS":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(17,219,71,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG ATAS":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(159,225,44,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG SELATAN":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(211,115,158,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG TENGAH":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(66,80,230,1.0)",
+              interactive: true,
+            };
+            break;
+          case "LEBONG UTARA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(107,94,221,1.0)",
+              interactive: true,
+            };
+            break;
+          case "MALINDEMAN":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(177,202,67,1.0)",
+              interactive: true,
+            };
+            break;
+          case "NAPALPUTIH":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(67,220,136,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PADANGJAYA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(142,201,95,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PELABAI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(211,103,233,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PEMATANG TIGA":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(219,219,105,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PINANGBELAPIS":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(203,80,113,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PUTRI HIJAU":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(222,168,76,1.0)",
+              interactive: true,
+            };
+            break;
+          case "PUTRIHIJAU":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(215,126,47,1.0)",
+              interactive: true,
+            };
+            break;
+          case "RIMBOPENGADANG":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(59,239,74,1.0)",
+              interactive: true,
+            };
+            break;
+          case "TANJUNGAGUNGPALIK":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(178,111,214,1.0)",
+              interactive: true,
+            };
+            break;
+          case "ULOKKUPAI":
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(107,148,201,1.0)",
+              interactive: true,
+            };
+            break;
+          default:
+            return {
+              pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+              opacity: 1,
+              color: "rgba(35,35,35,1.0)",
+              dashArray: "",
+              lineCap: "butt",
+              lineJoin: "miter",
+              weight: 1.0,
+              fill: true,
+              fillOpacity: 1,
+              fillColor: "rgba(80,178,200,1.0)",
+              interactive: true,
+            };
+            break;
+        }
+      }
+      map.createPane(
+        "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7"
+      );
+      map.getPane(
+        "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7"
+      ).style.zIndex = 407;
+      map.getPane(
+        "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7"
+      ).style["mix-blend-mode"] = "normal";
+      var layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7 =
+        new L.geoJson(
+          json_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+          {
+            attribution: "",
+            interactive: true,
+            dataVar:
+              "json_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+            layerName:
+              "layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+            pane: "pane_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+            onEachFeature:
+              pop_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+            style:
+              style_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_0,
+          }
+        );
+      bounds_group.addLayer(
+        layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7
+      );
+      map.addLayer(
+        layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7
+      );
+      function pop_kordinat_8(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' +
+          (feature.properties["Name"] !== null
+            ? autolinker.link(feature.properties["Name"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">gambar</th>\
+                        <td>' +
+          (feature.properties["gambar"] !== null
+            ? '<img style="height: 200px; width: 300px" src="images/' +
+              String(feature.properties["gambar"])
+                .replace(/[\\\/:]/g, "_")
+                .trim() +
+              '">'
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">web</th>\
+                        <td>' +
+          (feature.properties["web"] !== null
+            ? autolinker.link(feature.properties["web"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: "auto" });
+      }
+
+      function style_kordinat_8_0() {
+        return {
+          pane: "pane_kordinat_8",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(114,155,111,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_kordinat_8");
+      map.getPane("pane_kordinat_8").style.zIndex = 408;
+      map.getPane("pane_kordinat_8").style["mix-blend-mode"] = "normal";
+      var layer_kordinat_8 = new L.geoJson(json_kordinat_8, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_kordinat_8",
+        layerName: "layer_kordinat_8",
+        pane: "pane_kordinat_8",
+        onEachFeature: pop_kordinat_8,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_kordinat_8_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_kordinat_8);
+      map.addLayer(layer_kordinat_8);
+      function pop_lebong_9(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>OID_</strong><br />' +
+          (feature.properties["OID_"] !== null
+            ? autolinker.link(feature.properties["OID_"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Name"] !== null
+            ? autolinker.link(feature.properties["Name"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FolderPath"] !== null
+            ? autolinker.link(feature.properties["FolderPath"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SymbolID"] !== null
+            ? autolinker.link(feature.properties["SymbolID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["AltMode"] !== null
+            ? autolinker.link(feature.properties["AltMode"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Base"] !== null
+            ? autolinker.link(feature.properties["Base"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Snippet"] !== null
+            ? autolinker.link(feature.properties["Snippet"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["PopupInfo"] !== null
+            ? autolinker.link(feature.properties["PopupInfo"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["HasLabel"] !== null
+            ? autolinker.link(feature.properties["HasLabel"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LabelID"] !== null
+            ? autolinker.link(feature.properties["LabelID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">gambar</th>\
+                        <td>' +
+          (feature.properties["gambar"] !== null
+            ? '<img style="height: 200px; width: 300px" src="images/' +
+              String(feature.properties["gambar"])
+                .replace(/[\\\/:]/g, "_")
+                .trim() +
+              '">'
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">web</th>\
+                        <td>' +
+          (feature.properties["web"] !== null
+            ? autolinker.link(feature.properties["web"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: "auto" });
+      }
+
+      function style_lebong_9_0() {
+        return {
+          pane: "pane_lebong_9",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(232,113,141,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_lebong_9");
+      map.getPane("pane_lebong_9").style.zIndex = 409;
+      map.getPane("pane_lebong_9").style["mix-blend-mode"] = "normal";
+      var layer_lebong_9 = new L.geoJson(json_lebong_9, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_lebong_9",
+        layerName: "layer_lebong_9",
+        pane: "pane_lebong_9",
+        onEachFeature: pop_lebong_9,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_lebong_9_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_lebong_9);
+      map.addLayer(layer_lebong_9);
+      function pop_bengkulu_utara2_10(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["OID_"] !== null
+            ? autolinker.link(feature.properties["OID_"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' +
+          (feature.properties["Name"] !== null
+            ? autolinker.link(feature.properties["Name"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["FolderPath"] !== null
+            ? autolinker.link(feature.properties["FolderPath"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SymbolID"] !== null
+            ? autolinker.link(feature.properties["SymbolID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["AltMode"] !== null
+            ? autolinker.link(feature.properties["AltMode"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Base"] !== null
+            ? autolinker.link(feature.properties["Base"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Snippet"] !== null
+            ? autolinker.link(feature.properties["Snippet"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["PopupInfo"] !== null
+            ? autolinker.link(feature.properties["PopupInfo"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["HasLabel"] !== null
+            ? autolinker.link(feature.properties["HasLabel"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["LabelID"] !== null
+            ? autolinker.link(feature.properties["LabelID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["gambar"] !== null
+            ? '<img src="images/' +
+              String(feature.properties["gambar"])
+                .replace(/[\\\/:]/g, "_")
+                .trim() +
+              '">'
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">web</th>\
+                        <td>' +
+          (feature.properties["web"] !== null
+            ? autolinker.link(feature.properties["web"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_bengkulu_utara2_10_0() {
+        return {
+          pane: "pane_bengkulu_utara2_10",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(114,155,111,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_bengkulu_utara2_10");
+      map.getPane("pane_bengkulu_utara2_10").style.zIndex = 410;
+      map.getPane("pane_bengkulu_utara2_10").style["mix-blend-mode"] = "normal";
+      var layer_bengkulu_utara2_10 = new L.geoJson(json_bengkulu_utara2_10, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_bengkulu_utara2_10",
+        layerName: "layer_bengkulu_utara2_10",
+        pane: "pane_bengkulu_utara2_10",
+        onEachFeature: pop_bengkulu_utara2_10,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_bengkulu_utara2_10_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_bengkulu_utara2_10);
+      map.addLayer(layer_bengkulu_utara2_10);
+      function pop_rejang_lebing_2_11(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["OID_"] !== null
+            ? autolinker.link(feature.properties["OID_"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["Name"] !== null
+            ? autolinker.link(feature.properties["Name"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FolderPath</th>\
+                        <td>' +
+          (feature.properties["FolderPath"] !== null
+            ? autolinker.link(feature.properties["FolderPath"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["SymbolID"] !== null
+            ? autolinker.link(feature.properties["SymbolID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AltMode</th>\
+                        <td>' +
+          (feature.properties["AltMode"] !== null
+            ? autolinker.link(feature.properties["AltMode"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Base</th>\
+                        <td>' +
+          (feature.properties["Base"] !== null
+            ? autolinker.link(feature.properties["Base"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Snippet</th>\
+                        <td>' +
+          (feature.properties["Snippet"] !== null
+            ? autolinker.link(feature.properties["Snippet"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">PopupInfo</th>\
+                        <td>' +
+          (feature.properties["PopupInfo"] !== null
+            ? autolinker.link(feature.properties["PopupInfo"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HasLabel</th>\
+                        <td>' +
+          (feature.properties["HasLabel"] !== null
+            ? autolinker.link(feature.properties["HasLabel"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LabelID</th>\
+                        <td>' +
+          (feature.properties["LabelID"] !== null
+            ? autolinker.link(feature.properties["LabelID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["gambar"] !== null
+            ? '<img src="images/' +
+              String(feature.properties["gambar"])
+                .replace(/[\\\/:]/g, "_")
+                .trim() +
+              '">'
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">web</th>\
+                        <td>' +
+          (feature.properties["web"] !== null
+            ? autolinker.link(feature.properties["web"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_rejang_lebing_2_11_0() {
+        return {
+          pane: "pane_rejang_lebing_2_11",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(152,125,183,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_rejang_lebing_2_11");
+      map.getPane("pane_rejang_lebing_2_11").style.zIndex = 411;
+      map.getPane("pane_rejang_lebing_2_11").style["mix-blend-mode"] = "normal";
+      var layer_rejang_lebing_2_11 = new L.geoJson(json_rejang_lebing_2_11, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_rejang_lebing_2_11",
+        layerName: "layer_rejang_lebing_2_11",
+        pane: "pane_rejang_lebing_2_11",
+        onEachFeature: pop_rejang_lebing_2_11,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_rejang_lebing_2_11_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_rejang_lebing_2_11);
+      map.addLayer(layer_rejang_lebing_2_11);
+      function pop_benteng_12(feature, layer) {
+        layer.on({
+          mouseout: function (e) {
+            for (i in e.target._eventParents) {
+              e.target._eventParents[i].resetStyle(e.target);
+            }
+          },
+          mouseover: highlightFeature,
+        });
+        var popupContent =
+          '<table>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["OID_"] !== null
+            ? autolinker.link(feature.properties["OID_"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Name</th>\
+                        <td>' +
+          (feature.properties["Name"] !== null
+            ? autolinker.link(feature.properties["Name"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">FolderPath</th>\
+                        <td>' +
+          (feature.properties["FolderPath"] !== null
+            ? autolinker.link(feature.properties["FolderPath"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SymbolID</th>\
+                        <td>' +
+          (feature.properties["SymbolID"] !== null
+            ? autolinker.link(feature.properties["SymbolID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AltMode</th>\
+                        <td>' +
+          (feature.properties["AltMode"] !== null
+            ? autolinker.link(feature.properties["AltMode"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Base</th>\
+                        <td>' +
+          (feature.properties["Base"] !== null
+            ? autolinker.link(feature.properties["Base"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Snippet</th>\
+                        <td>' +
+          (feature.properties["Snippet"] !== null
+            ? autolinker.link(feature.properties["Snippet"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">PopupInfo</th>\
+                        <td>' +
+          (feature.properties["PopupInfo"] !== null
+            ? autolinker.link(feature.properties["PopupInfo"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HasLabel</th>\
+                        <td>' +
+          (feature.properties["HasLabel"] !== null
+            ? autolinker.link(feature.properties["HasLabel"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LabelID</th>\
+                        <td>' +
+          (feature.properties["LabelID"] !== null
+            ? autolinker.link(feature.properties["LabelID"].toLocaleString())
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' +
+          (feature.properties["gambar"] !== null
+            ? '<img src="images/' +
+              String(feature.properties["gambar"])
+                .replace(/[\\\/:]/g, "_")
+                .trim() +
+              '">'
+            : "") +
+          '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">web</th>\
+                        <td>' +
+          (feature.properties["web"] !== null
+            ? autolinker.link(feature.properties["web"].toLocaleString())
+            : "") +
+          "</td>\
+                    </tr>\
+                </table>";
+        layer.bindPopup(popupContent, { maxHeight: 400 });
+      }
+
+      function style_benteng_12_0() {
+        return {
+          pane: "pane_benteng_12",
+          radius: 4.0,
+          opacity: 1,
+          color: "rgba(35,35,35,1.0)",
+          dashArray: "",
+          lineCap: "butt",
+          lineJoin: "miter",
+          weight: 1,
+          fill: true,
+          fillOpacity: 1,
+          fillColor: "rgba(243,166,178,1.0)",
+          interactive: true,
+        };
+      }
+      map.createPane("pane_benteng_12");
+      map.getPane("pane_benteng_12").style.zIndex = 412;
+      map.getPane("pane_benteng_12").style["mix-blend-mode"] = "normal";
+      var layer_benteng_12 = new L.geoJson(json_benteng_12, {
+        attribution: "",
+        interactive: true,
+        dataVar: "json_benteng_12",
+        layerName: "layer_benteng_12",
+        pane: "pane_benteng_12",
+        onEachFeature: pop_benteng_12,
+        pointToLayer: function (feature, latlng) {
+          var context = {
+            feature: feature,
+            variables: {},
+          };
+          return L.circleMarker(latlng, style_benteng_12_0(feature));
+        },
+      });
+      bounds_group.addLayer(layer_benteng_12);
+      map.addLayer(layer_benteng_12);
+      var baseMaps = {};
+      L.control
+        .layers(baseMaps, {
+          '<img src="legend/benteng_12.png" /> benteng': layer_benteng_12,
+          '<img src="legend/rejang_lebing_2_11.png" /> rejang_lebing_2':
+            layer_rejang_lebing_2_11,
+          '<img src="legend/bengkulu_utara2_10.png" /> bengkulu_utara2':
+            layer_bengkulu_utara2_10,
+          '<img src="legend/lebong_9.png" /> lebong': layer_lebong_9,
+          '<img src="legend/kordinat_8.png" /> kordinat': layer_kordinat_8,
+          '[Lapak GIS.com] KAB. BENGKULU UTARA — ADMINISTRASIKECAMATAN_AR_50K.shp<br /><table><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_AIRBESI0.png" /></td><td>AIRBESI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_AIRNAPAL1.png" /></td><td>AIRNAPAL</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_AIRPADANG2.png" /></td><td>AIRPADANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_AIRRAMI3.png" /></td><td>AIRRAMI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_ARGAMAKMUR4.png" /></td><td>ARGAMAKMUR</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_ARMAJAYA5.png" /></td><td>ARMAJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_BANGHAJI6.png" /></td><td>BANGHAJI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_BATIKNAU7.png" /></td><td>BATIKNAU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_BERMANIULU8.png" /></td><td>BERMANI ULU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_DAERAHSENGKETA9.png" /></td><td>DAERAH SENGKETA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_ENGGANO10.png" /></td><td>ENGGANO</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_GIRIMULYA11.png" /></td><td>GIRIMULYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_HULUPALIK12.png" /></td><td>HULUPALIK</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_JANGKAT13.png" /></td><td>JANGKAT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_KERKAP14.png" /></td><td>KERKAP</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_KETAHUN15.png" /></td><td>KETAHUN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_LAIS16.png" /></td><td>LAIS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_LEBONGATAS17.png" /></td><td>LEBONG ATAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_LEBONGSELATAN18.png" /></td><td>LEBONG SELATAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_LEBONGTENGAH19.png" /></td><td>LEBONG TENGAH</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_LEBONGUTARA20.png" /></td><td>LEBONG UTARA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_MALINDEMAN21.png" /></td><td>MALINDEMAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_NAPALPUTIH22.png" /></td><td>NAPALPUTIH</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PADANGJAYA23.png" /></td><td>PADANGJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PELABAI24.png" /></td><td>PELABAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PEMATANGTIGA25.png" /></td><td>PEMATANG TIGA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PINANGBELAPIS26.png" /></td><td>PINANGBELAPIS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PUTRIHIJAU27.png" /></td><td>PUTRI HIJAU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_PUTRIHIJAU28.png" /></td><td>PUTRIHIJAU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_RIMBOPENGADANG29.png" /></td><td>RIMBOPENGADANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_TANJUNGAGUNGPALIK30.png" /></td><td>TANJUNGAGUNGPALIK</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_ULOKKUPAI31.png" /></td><td>ULOKKUPAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7_32.png" /></td><td></td></tr></table>':
+            layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+          '[Lapak GIS.com] KAB. BENGKULU TENGAH — ADMINISTRASIKECAMATAN_AR_50K.shp<br /><table><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_AIRNAPAL0.png" /></td><td>AIRNAPAL</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_BANGHAJI1.png" /></td><td>BANGHAJI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_HULUPALIK2.png" /></td><td>HULUPALIK</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_KARANGTINGGI3.png" /></td><td>KARANGTINGGI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_KEPAHIANG4.png" /></td><td>KEPAHIANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_KERKAP5.png" /></td><td>KERKAP</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_LUBUKSANDI6.png" /></td><td>LUBUKSANDI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_MERIGIKELINDANG7.png" /></td><td>MERIGIKELINDANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_MERIGISAKTI8.png" /></td><td>MERIGISAKTI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_MUARABANGKAHULU9.png" /></td><td>MUARABANGKA HULU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_PAGARJATI10.png" /></td><td>PAGARJATI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_PEMATANGTIGA11.png" /></td><td>PEMATANG TIGA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_PONDOKKELAPA12.png" /></td><td>PONDOKKELAPA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_PONDOKKUBANG13.png" /></td><td>PONDOKKUBANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_SEBERANGMUSI14.png" /></td><td>SEBERANGMUSI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_SUKARAJA15.png" /></td><td>SUKARAJA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_TABAPENANJUNG16.png" /></td><td>TABAPENANJUNG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_TALANGEMPAT17.png" /></td><td>TALANGEMPAT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_UJANMAS18.png" /></td><td>UJANMAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6_19.png" /></td><td></td></tr></table>':
+            layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+          '[Lapak GIS.com] KAB. REJANG LEBONG — ADMINISTRASIKECAMATAN_AR_50K.shp<br /><table><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_BANGHAJI0.png" /></td><td>BANGHAJI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_BERMANIULU1.png" /></td><td>BERMANI ULU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_BERMANIULURAYA2.png" /></td><td>BERMANI ULU RAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_BINDURIANG3.png" /></td><td>BINDURIANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_CURUP4.png" /></td><td>CURUP</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_CURUPSELATAN5.png" /></td><td>CURUP SELATAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_CURUPTENGAH6.png" /></td><td>CURUP TENGAH</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_CURUPTIMUR7.png" /></td><td>CURUP TIMUR</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_CURUPUTARA8.png" /></td><td>CURUP UTARA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_KABAWETAN9.png" /></td><td>KABAWETAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_KOTAPADANG10.png" /></td><td>KOTAPADANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_LUBUKLINGGAUBARATSATU11.png" /></td><td>LUBUKLINGGAU BARAT SATU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_LUBUKLINGGAUSELATANSATU12.png" /></td><td>LUBUKLINGGAU SELATAN SATU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_LUBUKLINGGAUTIMURDUA13.png" /></td><td>LUBUKLINGGAU TIMUR DUA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_MERIGI14.png" /></td><td>MERIGI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_MUARABELITI15.png" /></td><td>MUARABELITI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_MUARAKEMUMU16.png" /></td><td>MUARAKEMUMU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_PADANGULAKTANDING17.png" /></td><td>PADANGULAKTANDING</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SALING18.png" /></td><td>SALING</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SELANGIT19.png" /></td><td>SELANGIT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SELUPUREJANG20.png" /></td><td>SELUPUREJANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SINDANGBELITIILIR21.png" /></td><td>SINDANGBELITI ILIR</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SINDANGBELITIULU22.png" /></td><td>SINDANGBELITI ULU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SINDANGDATARAN23.png" /></td><td>SINDANGDATARAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_SINDANGKELINGI24.png" /></td><td>SINDANGKELINGI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_TALANGPADANG25.png" /></td><td>TALANGPADANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_TEBINGTINGGI26.png" /></td><td>TEBINGTINGGI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_TIANGPUMPUNGKEPUNGUT27.png" /></td><td>TIANGPUMPUNGKEPUNGUT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_UJANMAS28.png" /></td><td>UJANMAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_ULUMUSI29.png" /></td><td>ULUMUSI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5_30.png" /></td><td></td></tr></table>':
+            layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+          '<img src="legend/kordinatkeclebong_4.png" /> kordinatkec.lebong':
+            layer_kordinatkeclebong_4,
+          '[Lapak GIS.com] KAB. LEBONG — ADMINISTRASIKECAMATAN_AR_50K.shp<br /><table><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_AMEN0.png" /></td><td>AMEN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_ARGAMAKMUR1.png" /></td><td>ARGAMAKMUR</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_ARMAJAYA2.png" /></td><td>ARMAJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_BATANGASAI3.png" /></td><td>BATANGASAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_BINGINKUNING4.png" /></td><td>BINGINKUNING</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_DAERAHSENGKETA5.png" /></td><td>DAERAH SENGKETA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_GIRIMULYA6.png" /></td><td>GIRIMULYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_HULUPALIK7.png" /></td><td>HULUPALIK</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_JANGKAT8.png" /></td><td>JANGKAT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_KARANGJAYA9.png" /></td><td>KARANGJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_LEBONGATAS10.png" /></td><td>LEBONG ATAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_LEBONGSELATAN11.png" /></td><td>LEBONG SELATAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_LEBONGTENGAH12.png" /></td><td>LEBONG TENGAH</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_LEBONGUTARA13.png" /></td><td>LEBONG UTARA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_LEBONGSAKTI14.png" /></td><td>LEBONGSAKTI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_PADANGJAYA15.png" /></td><td>PADANGJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_PELABAI16.png" /></td><td>PELABAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_PINANGBELAPIS17.png" /></td><td>PINANGBELAPIS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_PUTRIHIJAU18.png" /></td><td>PUTRIHIJAU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_RIMBOPENGADANG19.png" /></td><td>RIMBOPENGADANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_SELANGIT20.png" /></td><td>SELANGIT</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_TOPOS21.png" /></td><td>TOPOS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_ULOKKUPAI22.png" /></td><td>ULOKKUPAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_ULURAWAS23.png" /></td><td>ULURAWAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_URAMJAYA24.png" /></td><td>URAMJAYA</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3_25.png" /></td><td></td></tr></table>':
+            layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+          '[Lapak GIS.com] KAB. KEPAHIANG — ADMINISTRASIKECAMATAN_AR_50K.shp<br /><table><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_0.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_BERMANIILIR1.png" /></td><td>BERMANI ILIR</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_CURUPSELATAN2.png" /></td><td>CURUP SELATAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_KABAWETAN3.png" /></td><td>KABAWETAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_KEPAHIANG4.png" /></td><td>KEPAHIANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_MERIGI5.png" /></td><td>MERIGI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_MERIGIKELINDANG6.png" /></td><td>MERIGIKELINDANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_MERIGISAKTI7.png" /></td><td>MERIGISAKTI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_MUARAKEMUMU8.png" /></td><td>MUARAKEMUMU</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_PAGARJATI9.png" /></td><td>PAGARJATI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_PASEMAHAIRKERUH10.png" /></td><td>PASEMAHAIRKERUH</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_SEBERANGMUSI11.png" /></td><td>SEBERANGMUSI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_SELUPUREJANG12.png" /></td><td>SELUPUREJANG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_SINDANGDATARAN13.png" /></td><td>SINDANGDATARAN</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_TABAPENANJUNG14.png" /></td><td>TABAPENANJUNG</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_TEBATKARAI15.png" /></td><td>TEBATKARAI</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_UJANMAS16.png" /></td><td>UJANMAS</td></tr><tr><td style="text-align: center;"><img src="legend/LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2_ULUMUSI17.png" /></td><td>ULUMUSI</td></tr></table>':
+            layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+          "OSM Standard": layer_OSMStandard_1,
+          "google maps": layer_googlemaps_0,
+        })
+        .addTo(map);
+      setBounds();
+      var i = 0;
+      layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2.eachLayer(
+        function (layer) {
+          var context = {
+            feature: layer.feature,
+            variables: {},
+          };
+          layer.bindTooltip(
+            layer.feature.properties["NAMOBJ"] !== null
+              ? String(
+                  "<div style=\"color: #323232; font-size: 10pt; font-family: 'Open Sans', sans-serif;\">" +
+                    layer.feature.properties["NAMOBJ"]
+                ) + "</div>"
+              : "",
+            {
+              permanent: true,
+              offset: [-0, -16],
+              className:
+                "css_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2",
+            }
+          );
+          labels.push(layer);
+          totalMarkers += 1;
+          layer.added = true;
+          addLabel(layer, i);
+          i++;
+        }
+      );
+      var i = 0;
+      layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3.eachLayer(
+        function (layer) {
+          var context = {
+            feature: layer.feature,
+            variables: {},
+          };
+          layer.bindTooltip(
+            layer.feature.properties["NAMOBJ"] !== null
+              ? String(
+                  "<div style=\"color: #323232; font-size: 10pt; font-family: 'Open Sans', sans-serif;\">" +
+                    layer.feature.properties["NAMOBJ"]
+                ) + "</div>"
+              : "",
+            {
+              permanent: true,
+              offset: [-0, -16],
+              className:
+                "css_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3",
+            }
+          );
+          labels.push(layer);
+          totalMarkers += 1;
+          layer.added = true;
+          addLabel(layer, i);
+          i++;
+        }
+      );
+      var i = 0;
+      layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5.eachLayer(
+        function (layer) {
+          var context = {
+            feature: layer.feature,
+            variables: {},
+          };
+          layer.bindTooltip(
+            layer.feature.properties["NAMOBJ"] !== null
+              ? String(
+                  "<div style=\"color: #323232; font-size: 10pt; font-family: 'Open Sans', sans-serif;\">" +
+                    layer.feature.properties["NAMOBJ"]
+                ) + "</div>"
+              : "",
+            {
+              permanent: true,
+              offset: [-0, -16],
+              className:
+                "css_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5",
+            }
+          );
+          labels.push(layer);
+          totalMarkers += 1;
+          layer.added = true;
+          addLabel(layer, i);
+          i++;
+        }
+      );
+      var i = 0;
+      layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6.eachLayer(
+        function (layer) {
+          var context = {
+            feature: layer.feature,
+            variables: {},
+          };
+          layer.bindTooltip(
+            layer.feature.properties["NAMOBJ"] !== null
+              ? String(
+                  "<div style=\"color: #323232; font-size: 10pt; font-family: 'Open Sans', sans-serif;\">" +
+                    layer.feature.properties["NAMOBJ"]
+                ) + "</div>"
+              : "",
+            {
+              permanent: true,
+              offset: [-0, -16],
+              className:
+                "css_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6",
+            }
+          );
+          labels.push(layer);
+          totalMarkers += 1;
+          layer.added = true;
+          addLabel(layer, i);
+          i++;
+        }
+      );
+      var i = 0;
+      layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7.eachLayer(
+        function (layer) {
+          var context = {
+            feature: layer.feature,
+            variables: {},
+          };
+          layer.bindTooltip(
+            layer.feature.properties["NAMOBJ"] !== null
+              ? String(
+                  "<div style=\"color: #323232; font-size: 10pt; font-family: 'Open Sans', sans-serif;\">" +
+                    layer.feature.properties["NAMOBJ"]
+                ) + "</div>"
+              : "",
+            {
+              permanent: true,
+              offset: [-0, -16],
+              className:
+                "css_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7",
+            }
+          );
+          labels.push(layer);
+          totalMarkers += 1;
+          layer.added = true;
+          addLabel(layer, i);
+          i++;
+        }
+      );
+      resetLabels([
+        layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+        layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+        layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+        layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+        layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+      ]);
+      map.on("zoomend", function () {
+        resetLabels([
+          layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+          layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+          layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+          layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+          layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+        ]);
+      });
+      map.on("layeradd", function () {
+        resetLabels([
+          layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+          layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+          layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+          layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+          layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+        ]);
+      });
+      map.on("layerremove", function () {
+        resetLabels([
+          layer_LapakGIScomKABKEPAHIANGADMINISTRASIKECAMATAN_AR_50Kshp_2,
+          layer_LapakGIScomKABLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_3,
+          layer_LapakGIScomKABREJANGLEBONGADMINISTRASIKECAMATAN_AR_50Kshp_5,
+          layer_LapakGIScomKABBENGKULUTENGAHADMINISTRASIKECAMATAN_AR_50Kshp_6,
+          layer_LapakGIScomKABBENGKULUUTARAADMINISTRASIKECAMATAN_AR_50Kshp_7,
+        ]);
+      });
+    </script>
+  </body>
+</html>
